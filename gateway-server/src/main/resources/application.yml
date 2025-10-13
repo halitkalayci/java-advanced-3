@@ -10,7 +10,6 @@ spring:
               uri: lb://review-service  #http://localhost:8080
               predicates:
                 - Path=/api/v1/reviews/**,/api/v2/reviews/**
-
             - id: order-service-router
               uri: lb://order-service
               predicates:
@@ -23,6 +22,12 @@ spring:
               uri: lb://aggregator-service
               predicates:
                 - Path=/api/v1/product-aggregator/**
+            - id: fallback-router
+              uri: https://google.com.tr
+              predicates:
+                - Path=/**
+              metadata:
+                order: 100
 server:
   port: 8888
 
