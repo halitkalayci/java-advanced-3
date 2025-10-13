@@ -11,12 +11,34 @@ servers:
 paths:
   /api/v1/reviews:
     post:
-      ...
-    get:
-      ...
-
+      tags: [ Reviews ]
+      summary: Create a review
+      description: >
+        "This endpoint creates a new review for the specified product."
+      operationId: createReview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateReviewRequest' }
+      responses:
+        '201':
+          description: CREATED
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id: { type: string, format: uuid }
+                  productId: { type: string, format: uuid }
+                  rate: { type: number, minimum: 1, maximum: 5 }
+                  description: { type: string, maxLength: 255 }
 components:
   schemas:
     CreateReviewRequest:
-      ...
-
+      type: object
+      required: [productId, rate, description]
+      properties:
+        productId: { type: string, format: uuid }
+        rate: { type: number, minimum: 1, maximum: 5 }
+        description: { type: string, maxLength: 255 }
