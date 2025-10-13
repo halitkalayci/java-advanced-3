@@ -1,0 +1,22 @@
+openapi: 3.0.3
+info:
+  title: Review Service API
+  description: API mor managing product reviews.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8085
+    description: Local development server
+
+paths:
+  /api/v1/reviews:
+    post:
+      ...
+    get:
+      ...
+
+components:
+  schemas:
+    CreateReviewRequest:
+      ...
+
