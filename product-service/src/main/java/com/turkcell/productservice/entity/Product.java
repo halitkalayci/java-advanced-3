@@ -19,33 +19,37 @@ public class Product {
     private BigDecimal price;
     private int stock;
 
-    public UUID id() {
+
+    public UUID getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public int getStock() {
+        return stock;
     }
 
     public void setId(UUID id) {
         this.id = id;
     }
 
-    public String name() {
-        return name;
-    }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public BigDecimal price() {
-        return price;
-    }
 
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public int stock() {
-        return stock;
-    }
 
     public void setStock(int stock) {
         this.stock = stock;

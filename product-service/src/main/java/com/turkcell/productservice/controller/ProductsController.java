@@ -1,5 +1,6 @@
 package com.turkcell.productservice.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.turkcell.productservice.command.create.CreateProductCommand;
 import com.turkcell.productservice.command.create.CreateProductCommandHandler;
 import com.turkcell.productservice.entity.Product;
@@ -29,8 +30,7 @@ public class ProductsController {
     }
 
     @PostMapping
-    public UUID create(@RequestBody CreateProductCommand command)
-    {
+    public UUID create(@RequestBody CreateProductCommand command) throws JsonProcessingException {
         return createProductCommandHandler.handle(command);
     }
 
