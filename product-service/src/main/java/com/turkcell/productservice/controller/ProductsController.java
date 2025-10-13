@@ -2,6 +2,10 @@ package com.turkcell.productservice.controller;
 
 import com.turkcell.productservice.command.create.CreateProductCommand;
 import com.turkcell.productservice.command.create.CreateProductCommandHandler;
+import com.turkcell.productservice.entity.Product;
+import com.turkcell.productservice.query.list.ListProductQuery;
+import com.turkcell.productservice.query.list.ListProductQueryHandler;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -10,10 +14,13 @@ import java.util.UUID;
 @RequestMapping("/api/v1/products")
 public class ProductsController {
     private final CreateProductCommandHandler createProductCommandHandler;
+    private final ListProductQueryHandler listProductQueryHandler;
 
-    public ProductsController(CreateProductCommandHandler createProductCommandHandler) {
+    public ProductsController(CreateProductCommandHandler createProductCommandHandler, ListProductQueryHandler listProductQueryHandler) {
         this.createProductCommandHandler = createProductCommandHandler;
+        this.listProductQueryHandler = listProductQueryHandler;
     }
+
 
     @GetMapping("{id}")
     public Product getById(@PathVariable int id)
@@ -25,6 +32,12 @@ public class ProductsController {
     public UUID create(@RequestBody CreateProductCommand command)
     {
         return createProductCommandHandler.handle(command);
+    }
+
+    @GetMapping
+    public Page<com.turkcell.productservice.entity.Product> getProducts(@RequestParam int pageIndex, @RequestParam int pageSize) {
+        ListProductQuery query = new ListProductQuery(pageIndex, pageSize);
+        return listProductQueryHandler.getProducts(query);
     }
 
     public record Product(int id, String name, String description) {}
