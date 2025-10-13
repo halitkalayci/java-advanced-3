@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -26,19 +27,24 @@ public class ProductAggregatorController {
                 .get()
                 .uri("http://gateway-server/api/v1/products/"+1)
                 .retrieve()
-                .bodyToMono(Product.class);
+                .bodyToMono(Product.class)
+                .onErrorResume(throwable -> Mono.error(new RuntimeException("Product service is currently unavailable.")));
+
 
         Mono<List<Review>> reviewsMono = webClientBuilder
                 .build()
                 .get()
                 .uri("http://gateway-server/api/v2/reviews?productId="+1)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<Review>>() {});
+                .bodyToMono(new ParameterizedTypeReference<List<Review>>() {})
+                .onErrorReturn(Collections.emptyList());
+
         // zip -> iki isteği PARALEL çalıştır, sonuçları birleştir.
         return Mono
                 .zip(productMono, reviewsMono)
                 .map(tuple -> new AggregatedProductDetail(tuple.getT1(), tuple.getT2()));
     }
+    // Cascading Failure -> Bir servisin hatasının tüm sisteme yayılması.
 
 
     record Product(int id, String name, String description) {}
