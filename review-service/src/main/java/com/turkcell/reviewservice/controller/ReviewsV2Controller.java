@@ -13,6 +13,7 @@ public class ReviewsV2Controller implements ReviewsV2Api {
 
     @Override
     public ResponseEntity<CreateReviewV2201Response> createReviewV2(CreateReviewRequestV2 createReviewRequestV2) {
+        System.out.println("v2 çalıştı");
         return null;
     }
 }

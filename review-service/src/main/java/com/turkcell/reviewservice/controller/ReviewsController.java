@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReviewsController implements ReviewsApi {
     @Override
     public ResponseEntity<CreateReview201Response> createReview(CreateReviewRequest createReviewRequest) {
+        System.out.println("v1 Çalıştı");
         return null;
     }
 }
