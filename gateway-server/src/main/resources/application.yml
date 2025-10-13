@@ -15,6 +15,10 @@ spring:
               uri: lb://order-service
               predicates:
                 - Path=/api/v1/orders/**
+            - id: product-service-router
+              uri: lb://product-service
+              predicates:
+                - Path=/api/v1/products/**
 server:
   port: 8888
 
