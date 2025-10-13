@@ -9,18 +9,18 @@ servers:
     description: Local development server
 
 paths:
-  /api/v1/reviews:
+  /api/v2/reviews:
     post:
-      tags: [ Reviews ]
+      tags: [ ReviewsV2 ]
       summary: Create a review
       description: >
         "This endpoint creates a new review for the specified product."
-      operationId: createReview
+      operationId: createReviewV2
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/CreateReviewRequest' }
+            schema: { $ref: '#/components/schemas/CreateReviewRequestV2' }
       responses:
         '201':
           description: CREATED
@@ -31,15 +31,15 @@ paths:
                 properties:
                   id: { type: string, format: uuid }
                   productId: { type: string, format: uuid }
-                  rate: { type: number, minimum: 1, maximum: 5 }
+                  rate: { type: integer, minimum: 1, maximum: 5 }
                   description: { type: string, maxLength: 255 }
 components:
   schemas:
-    CreateReviewRequest:
+    CreateReviewRequestV2:
       type: object
-      required: [productId, rate, description]
+      required: [productId, rate, description, userId]
       properties:
         productId: { type: string, format: uuid }
-        rate: { type: number, minimum: 1, maximum: 5 }
+        rate: { type: integer, minimum: 1, maximum: 5 }
         description: { type: string, maxLength: 255 }
-        positive: {type: boolean}
+        userId: { type: string, format: uuid }
