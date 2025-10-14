@@ -24,7 +24,14 @@ spring:
         orderCreated-out-0:
           destination: orders
           content-type: application/json
-
+      kafka:
+        bindings:
+          orderCreated-out-0:
+            producer:
+              sync: true # Mesaj gönderim i?leminin senkron olmas?n? sa?lar. Kafka ok-error verene kadar bekle.
+              configuration:
+                enable.idempotence: true
+                acks: all # Tüm kopyalardan onay bekle.
 server:
   port: 8081
 
