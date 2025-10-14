@@ -12,6 +12,17 @@ spring:
     url: jdbc:h2:file:C:/Users/PC1/product-db;
     username: sa
     password:
+  kafka:
+    bootstrap-servers: localhost:29023
+  cloud:
+    function:
+      definition: processOrder
+    stream:
+      bindings:
+        processOrder-in-0:
+          destination: orders
+          content-type: application/json
+          group: product-service
 server:
   port: 8082
 
