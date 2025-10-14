@@ -23,6 +23,18 @@ spring:
           destination: orders
           content-type: application/json
           group: product-service
+          consumer:
+            max-attempts: 5
+            back-off-initial-interval: 1000
+            back-off-multiplier: 2.0
+            back-off-max-interval: 30000
+      kafka:
+        bindings:
+          processOrder-in-0:
+            consumer:
+              enable-dlq: true
+              # error.<destination>.<group>
+              #dlq-name: orders.notification.dlq
 server:
   port: 8082
 

@@ -12,6 +12,9 @@ public class OrderCreatedConsumer {
     public Consumer<OrderCreatedEvent> orderCreatedEventConsumer()
     {
         return event -> {
+            System.out.println("Event yakalandı.");
+            int a = 1/0;
+            System.out.println("Event handle edildi.");
             System.out.println("Order Created Event Yakalandı: " + event.orderId());
         };
     }
