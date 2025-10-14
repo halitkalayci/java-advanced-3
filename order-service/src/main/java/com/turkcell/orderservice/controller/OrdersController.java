@@ -1,6 +1,7 @@
 package com.turkcell.orderservice.controller;
 
 import com.turkcell.orderservice.client.ProductClient;
+import com.turkcell.orderservice.client.StaticProductClient;
 import com.turkcell.orderservice.contract.GetProductByIdContract;
 import com.turkcell.orderservice.dto.CreateOrderRequest;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +14,17 @@ import java.time.OffsetDateTime;
 public class OrdersController {
     private final RestTemplate restTemplate;
     private final ProductClient productClient;
+    private final StaticProductClient staticProductClient;
 
-    public OrdersController(RestTemplate restTemplate, ProductClient productClient) {
+    public OrdersController(RestTemplate restTemplate, ProductClient productClient, StaticProductClient staticProductClient) {
         this.restTemplate = restTemplate;
         this.productClient = productClient;
+        this.staticProductClient = staticProductClient;
     }
 
     @GetMapping
     public String getOrders() {
+        var response = this.staticProductClient.getProducts(0,20);
         System.out.println("Order servis çalıştı. " + OffsetDateTime.now().toString());
         return "Order Service";
     }
