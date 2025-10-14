@@ -32,6 +32,7 @@ public class OutboxEventPublisher {
        // Her x ms'de bir bu fonksiyonu yeni bir process olarak tetikle.
        // Polling -> 5snde bir değişsede değişmesede query çalışır.
        // TODO: CDC -> Change Data Capture -> Debezium
+       // TODO: Rabbitmq
         System.out.println("Publishing pending events");
         List<OutboxMessage> pendingEvents = outboxMessageRepository.findByStatusOrderByCreatedAtAsc(OutboxStatus.PENDING);
 

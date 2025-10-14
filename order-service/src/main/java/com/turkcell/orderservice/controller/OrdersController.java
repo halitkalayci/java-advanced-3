@@ -6,9 +6,13 @@ import com.turkcell.orderservice.client.ProductClient;
 import com.turkcell.orderservice.client.StaticProductClient;
 import com.turkcell.orderservice.contract.GetProductByIdContract;
 import com.turkcell.orderservice.dto.CreateOrderRequest;
+import com.turkcell.orderservice.entity.Order;
+import com.turkcell.orderservice.entity.OrderItem;
 import com.turkcell.orderservice.entity.OutboxMessage;
 import com.turkcell.orderservice.messaging.event.OrderCreatedEvent;
 import com.turkcell.orderservice.messaging.event.OrderCreatedItem;
+import com.turkcell.orderservice.repository.OrderItemRepository;
+import com.turkcell.orderservice.repository.OrderRepository;
 import com.turkcell.orderservice.repository.OutboxMessageRepository;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.web.bind.annotation.*;
@@ -26,13 +30,17 @@ public class OrdersController {
     private final StaticProductClient staticProductClient;
     private final OutboxMessageRepository outboxMessageRepository;
     private final ObjectMapper objectMapper;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
 
-    public OrdersController(RestTemplate restTemplate, ProductClient productClient, StaticProductClient staticProductClient, StreamBridge streamBridge, OutboxMessageRepository outboxMessageRepository, ObjectMapper objectMapper) {
+    public OrdersController(RestTemplate restTemplate, ProductClient productClient, StaticProductClient staticProductClient, OutboxMessageRepository outboxMessageRepository, ObjectMapper objectMapper, OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
         this.restTemplate = restTemplate;
         this.productClient = productClient;
         this.staticProductClient = staticProductClient;
         this.outboxMessageRepository = outboxMessageRepository;
         this.objectMapper = objectMapper;
+        this.orderRepository = orderRepository;
+        this.orderItemRepository = orderItemRepository;
     }
 
     @GetMapping
@@ -43,26 +51,35 @@ public class OrdersController {
     }
 
     @PostMapping
-    public String addOrder(@RequestBody CreateOrderRequest order) throws JsonProcessingException {
-        // Sync iletişim.
-        for(CreateOrderRequest.OrderProductItem item: order.getItems())
+    public String addOrder(@RequestBody CreateOrderRequest createOrderRequest) throws JsonProcessingException {
+        Order order = new Order();
+        order.setCustomerId(UUID.randomUUID());
+        orderRepository.save(order);
+
+        for(CreateOrderRequest.OrderProductItem item: createOrderRequest.getItems())
         {
             GetProductByIdContract response = productClient.getProductById(item.productId());
-            if(response.stock() < item.quantity())
-                throw new RuntimeException(response.name() +  " ürünü için stok değeri yetersiz.");
+            /*if(response.stock() < item.quantity())
+                throw new RuntimeException(response.name() +  " ürünü için stok değeri yetersiz.");*/
+            OrderItem orderItem = new OrderItem();
+            orderItem.setQuantity(item.quantity());
+            orderItem.setProductId(response.id());
+            orderItem.setUnitPrice(response.price());
+            orderItem.setOrder(order);
+            orderItemRepository.save(orderItem);
         }
         // Bu işi controller yapmamalı.
         // Outbox isimli bir tabloya, bu eventin gönderilmesi gerektiğini söylemeli.
         OrderCreatedEvent createdEvent = new OrderCreatedEvent(
-                UUID.randomUUID(),
+                order.id(),
                 BigDecimal.valueOf(100),
-                order.getItems().stream().map(i->new OrderCreatedItem(i.productId(), i.quantity())).toList()
+                createOrderRequest.getItems().stream().map(i->new OrderCreatedItem(i.productId(), i.quantity())).toList()
         );
 
         OutboxMessage outboxMessage = new OutboxMessage();
         outboxMessage.setAggregateType("Order");
         outboxMessage.setEventType("OrderCreatedEvent");
-        outboxMessage.setAggregateId(UUID.randomUUID()); // order'in idsi
+        outboxMessage.setAggregateId(order.id()); // order'in idsi
         outboxMessage.setPayloadJson(objectMapper.writeValueAsString(createdEvent));
 
         outboxMessageRepository.save(outboxMessage);

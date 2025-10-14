@@ -18,12 +18,16 @@ spring:
     bootstrap-servers: localhost:9094
   cloud:
     function:
-      definition: orderCreated
+      definition: orderCreated,stockDecreaseFailed
     stream:
       bindings:
         orderCreated-out-0:
           destination: orders
           content-type: application/json
+        stockDecreaseFailed-in-0:
+          destination: products
+          content-type: application/json
+          group: order-service
       kafka:
         bindings:
           orderCreated-out-0:
