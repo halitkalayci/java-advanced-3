@@ -14,6 +14,7 @@ import java.time.Duration;
 @Configuration
 public class WebClientConfig
 {
+
     @Bean
     @LoadBalanced
     public WebClient.Builder loadBalancedWebClientBuilder() {
