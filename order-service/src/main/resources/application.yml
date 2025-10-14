@@ -18,7 +18,7 @@ spring:
     bootstrap-servers: localhost:9094
   cloud:
     function:
-      definition: orderCreated,stockDecreaseFailed
+      definition: orderCreated;stockDecreaseFailed
     stream:
       bindings:
         orderCreated-out-0:
