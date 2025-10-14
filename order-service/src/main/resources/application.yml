@@ -2,7 +2,7 @@ spring:
   application:
     name: order-service
   kafka:
-    bootstrap-servers: localhost:29023
+    bootstrap-servers: localhost:9094
   cloud:
     function:
       definition: orderCreated
