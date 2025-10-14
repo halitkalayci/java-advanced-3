@@ -1,5 +1,6 @@
 package com.turkcell.orderservice.controller;
 
+import com.turkcell.orderservice.client.ProductClient;
 import com.turkcell.orderservice.contract.GetProductByIdContract;
 import com.turkcell.orderservice.dto.CreateOrderRequest;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +12,11 @@ import java.time.OffsetDateTime;
 @RequestMapping("/api/v1/orders")
 public class OrdersController {
     private final RestTemplate restTemplate;
+    private final ProductClient productClient;
 
-    public OrdersController(RestTemplate restTemplate) {
+    public OrdersController(RestTemplate restTemplate, ProductClient productClient) {
         this.restTemplate = restTemplate;
+        this.productClient = productClient;
     }
 
     @GetMapping
@@ -27,10 +30,14 @@ public class OrdersController {
         // Sync iletişim.
         for(CreateOrderRequest.OrderProductItem item: order.getItems())
         {
-            String url = "http://product-service/api/v1/products/"+item.productId();
+            /*String url = "http://product-service/api/v1/products/"+item.productId();
             var response = restTemplate.getForEntity(url, GetProductByIdContract.class)
                     .getBody();
             System.out.println(response.name() + " ürünü için stok okundu: " + response.stock());
+            if(response.stock() < item.quantity())
+                throw new RuntimeException(response.name() +  " ürünü için stok değeri yetersiz.");*/
+
+            GetProductByIdContract response = productClient.getProductById(item.productId());
             if(response.stock() < item.quantity())
                 throw new RuntimeException(response.name() +  " ürünü için stok değeri yetersiz.");
         }
