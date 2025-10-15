@@ -27,12 +27,6 @@ spring:
               uri: lb://aggregator-service
               predicates:
                 - Path=/api/v1/product-aggregator/**
-            - id: fallback-router
-              uri: https://google.com.tr
-              predicates:
-                - Path=/**
-              metadata:
-                order: 100
 server:
   port: 8888
 
