@@ -1,6 +1,24 @@
 spring:
   application:
     name: bff
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8585/realms/ecommerce-dev
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: bff-client
+            client-secret: ${CLIENT_SECRET:plfwU9HlBkmaEFOldoJMDGwSjbYDmIYs}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            authorization-grant-type: authorization_code
+            scope:
+              - openid
+              - profile
+              - email
 
 server:
   port: 8070
+
