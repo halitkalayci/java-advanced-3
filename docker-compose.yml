@@ -50,6 +50,7 @@ services:
     networks:
       - kafkanet
 
+
 volumes:
   kafka-data:
 
