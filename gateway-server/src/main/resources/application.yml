@@ -37,7 +37,7 @@ spring:
                     key-resolver: "#{@ipKeyResolver}"
                     redis-rate-limiter.replenishRate: 1 # her saniye kaç token eklenecek?
                     redis-rate-limiter.burstCapacity: 60 # token kapasitesi
-                    redis-rate-limiter.requestedTokens: 3 # her isteğin harcayacağı token sayısı.
+                    redis-rate-limiter.requestedTokens: 1 # her isteğin harcayacağı token sayısı.
             - id: aggregator-service-router
               uri: lb://aggregator-service
               predicates:
