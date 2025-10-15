@@ -20,7 +20,7 @@ public class BFFController {
                         "sub",user.getSubject(),
                         "username",user.getPreferredUsername(),
                         "email",user.getEmail(),
-                        "roles",user.getAuthorities()
+                        "authorities",user.getAuthorities()
                 )
         );
     }
