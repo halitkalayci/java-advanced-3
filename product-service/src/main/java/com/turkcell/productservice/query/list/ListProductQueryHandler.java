@@ -5,6 +5,7 @@ import com.turkcell.productservice.repository.ProductRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class ListProductQueryHandler {
         this.productRepository = productRepository;
     }
 
+    @PreAuthorize("hasAnyAuthority('Product.Read')")
     public Page<Product> getProducts(ListProductQuery query) {
         Pageable pageable = PageRequest.of(query.pageIndex(),query.pageSize());
         return productRepository.findAll(pageable);

@@ -6,6 +6,7 @@ import com.turkcell.productservice.entity.EventModel;
 import com.turkcell.productservice.entity.Product;
 import com.turkcell.productservice.repository.EventModelRepository;
 import com.turkcell.productservice.repository.ProductRepository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,9 @@ public class CreateProductCommandHandler
         this.objectMapper = objectMapper;
     }
 
+
+    //@PreAuthorize("hasAnyAuthority('Product.Create','Admin')")
+    @PreAuthorize("isAuthenticated()")
     public UUID handle(CreateProductCommand command) throws JsonProcessingException {
         Product product = new Product();
         product.setName(command.name());

@@ -9,6 +9,11 @@ import com.turkcell.productservice.query.getById.GetByIdProductQueryHandler;
 import com.turkcell.productservice.query.list.ListProductQuery;
 import com.turkcell.productservice.query.list.ListProductQueryHandler;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -42,6 +47,16 @@ public class ProductsController {
         GetByIdProductQuery query = new GetByIdProductQuery(id);
         return getByIdProductQueryHandler.handle(query);
     }
+
+    //@PreAuthorize("#id == authentication.credentials.claims.sub or hasAuthority('Admin')")
+    @GetMapping("user")
+    @PreAuthorize("hasAnyAuthority('Product.Read','Admin')")
+    public String getUser(@AuthenticationPrincipal Jwt jwt)
+    {
+        return "Giriş yapılmış kullanıcı id: " + jwt.getSubject();
+    }
+
+
 
     public record Product(int id, String name, String description) {}
 }
