@@ -29,10 +29,9 @@ public class WebClientConfig {
          ReactiveClientRegistrationRepository clients,
          ServerOAuth2AuthorizedClientRepository authorizedClients
     ) {
-        // keycloaktaki giriş yapmış kullanıcı bilgisi varsa, bunu jwt ile exchange et.
-        // sessionId -> jwt
         var oauth = new ServerOAuth2AuthorizedClientExchangeFilterFunction(clients, authorizedClients);
         oauth.setDefaultClientRegistrationId("keycloak");
+        oauth.setDefaultOAuth2AuthorizedClient(true);
 
         return builder.filter(oauth).build();
     }

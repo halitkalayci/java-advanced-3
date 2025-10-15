@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/auth")
 public class BFFController {
     @GetMapping("me")
     public Mono<Map<String,Object>> me(@AuthenticationPrincipal OidcUser user)
