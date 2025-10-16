@@ -29,7 +29,7 @@ public class CreateProductCommandHandler
 
 
     //@PreAuthorize("hasAnyAuthority('Product.Create','Admin')")
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     public UUID handle(CreateProductCommand command) throws JsonProcessingException {
         Product product = new Product();
         product.setName(command.name());
