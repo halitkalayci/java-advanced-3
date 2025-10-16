@@ -1,0 +1,30 @@
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+server:
+  port: 8082
+
+spring:
+  cloud:
+    function:
+      definition: processOrder;stockDecreaseFailed
+    stream:
+      bindings:
+        stockDecreaseFailed-out-0:
+          destination: products
+          content-type: application/json
+        processOrder-in-0:
+          destination: orders
+          content-type: application/json
+          group: product-service
+          consumer:
+            max-attempts: 5
+            back-off-initial-interval: 1000
+            back-off-multiplier: 2.0
+            back-off-max-interval: 30000
+      kafka:
+        bindings:
+          processOrder-in-0:
+            consumer:
+              enable-dlq: true

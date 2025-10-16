@@ -1,0 +1,20 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://keycloak.turkcell.com.tr/realms/ecommerce-prod
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc:postgresql:/blabla;
+    username: sa
+    password: real_password
+  kafka:
+    bootstrap-servers: 154.32.35.6:9094
+
+eureka:
+  client:
+    service-url:
+      defaultZone: https://eureka.turkcell.com/eureka/
