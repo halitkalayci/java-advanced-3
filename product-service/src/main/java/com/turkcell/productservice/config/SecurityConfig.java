@@ -31,8 +31,8 @@ public class SecurityConfig {
                 // Resource-Level Security
                 .authorizeHttpRequests(
                         req ->        req
-                                .requestMatchers(HttpMethod.GET, "/api/v1/products/**").hasAnyAuthority("Product.Read")
-                                .requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasAnyAuthority("Product.Create")
+                                //.requestMatchers(HttpMethod.GET, "/api/v1/products/**").hasAnyAuthority("Product.Read")
+                                //.requestMatchers(HttpMethod.POST, "/api/v1/products/**").hasAnyAuthority("Product.Create")
                                 .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 ->

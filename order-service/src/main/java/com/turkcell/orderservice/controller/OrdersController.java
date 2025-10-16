@@ -14,6 +14,7 @@ import com.turkcell.orderservice.messaging.event.OrderCreatedItem;
 import com.turkcell.orderservice.repository.OrderItemRepository;
 import com.turkcell.orderservice.repository.OrderRepository;
 import com.turkcell.orderservice.repository.OutboxMessageRepository;
+import io.micrometer.observation.annotation.Observed;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/orders")
+@Observed(name="orders-controller")
 public class OrdersController {
     private final RestTemplate restTemplate;
     private final ProductClient productClient;
@@ -51,6 +53,7 @@ public class OrdersController {
     }
 
     @PostMapping
+    @Observed(name="orders-controller.addOrder")
     public String addOrder(@RequestBody CreateOrderRequest createOrderRequest) throws JsonProcessingException {
         Order order = new Order();
         order.setCustomerId(UUID.randomUUID());

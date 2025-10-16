@@ -32,10 +32,10 @@ spring:
         bindings:
           orderCreated-out-0:
             producer:
-              sync: true # Mesaj gönderim i?leminin senkron olmas?n? sa?lar. Kafka ok-error verene kadar bekle.
+              sync: true # Mesaj gï¿½nderim i?leminin senkron olmas?n? sa?lar. Kafka ok-error verene kadar bekle.
               configuration:
                 enable.idempotence: true
-                acks: all # Tüm kopyalardan onay bekle.
+                acks: all # Tï¿½m kopyalardan onay bekle.
 server:
   port: 8081
 
@@ -45,3 +45,11 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http:/localhost:9411/api/v2/spans
