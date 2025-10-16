@@ -23,4 +23,4 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka/
 
-example: "Config-server'dan gelen product-service-dev.yml"
+example: "Config-server'dan gelen product-service-dev.yml 10:25"
