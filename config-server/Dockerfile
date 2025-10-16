@@ -17,4 +17,5 @@ FROM eclipse-temurin:21-jre-alpine
 
 COPY --from=builder /build/target/*.jar /app/app.jar
 
-ENTRYPOINT ["sh", "-c", "java -jar /app/app.jar"]
+ENTRYPOINT ["sh", "-c", "exec java -jar /app/app.jar"]
+# java->pid1
