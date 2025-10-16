@@ -1,0 +1,3 @@
+eureka:
+  service-url:
+    defaultZone: https://eureka.turkcell.com/eureka/

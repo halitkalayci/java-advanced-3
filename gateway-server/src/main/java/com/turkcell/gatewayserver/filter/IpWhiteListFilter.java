@@ -36,11 +36,11 @@ public class IpWhiteListFilter implements GlobalFilter {
         String ip = address != null ? address.getAddress().getHostAddress() : "unknown";
 
         boolean isAllowed = matchers.contains(ip);
-        if(!isAllowed)
+        /*if(!isAllowed)
         {
             exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
             return exchange.getResponse().setComplete();
-        }
+        }*/
 
         return chain.filter(exchange);
     }

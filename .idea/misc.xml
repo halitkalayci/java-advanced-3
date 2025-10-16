@@ -12,6 +12,7 @@
         <option value="$PROJECT_DIR$/aggregator-service/pom.xml" />
         <option value="$PROJECT_DIR$/embedded-servers/pom.xml" />
         <option value="$PROJECT_DIR$/bff/pom.xml" />
+        <option value="$PROJECT_DIR$/config-server/pom.xml" />
       </list>
     </option>
   </component>
