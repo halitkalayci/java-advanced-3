@@ -118,6 +118,13 @@ services:
         condition: service_healthy
     volumes:
       - kibana_data:/usr/share/kibana/data
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mem
 volumes:
   kafka-data:
   loki_data: { }
