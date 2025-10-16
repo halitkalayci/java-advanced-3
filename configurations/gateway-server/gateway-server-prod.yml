@@ -1,3 +1,47 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://keycloak.turkcell.com.tr/realms/ecommerce-prod
+  cloud:
+    gateway:
+      server:
+        webflux:
+          forwarded:
+            enabled: true
+          x-forwarded:
+            enabled: true
+          routes:
+            - id: review-service-router
+              uri: lb://review-service
+              predicates:
+                - Path=/api/v1/reviews/**,/api/v2/reviews/**redis
+            - id: order-service-router
+              uri: lb://order-service
+              predicates:
+                - Path=/api/v1/orders/**
+            - id: product-service-router
+              uri: lb://product-service
+              predicates:
+                - Path=/api/v1/products/**
+              filters:
+                - name: RequestRateLimiter
+                  args:
+                    key-resolver: "#{@ipKeyResolver}"
+                    redis-rate-limiter.replenishRate: 1
+                    redis-rate-limiter.burstCapacity: 40
+                    redis-rate-limiter.requestedTokens: 2
+            - id: aggregator-service-router
+              uri: lb://aggregator-service
+              predicates:
+                - Path=/api/v1/product-aggregator/**
+  data:
+    redis:
+      host: 145.57.54.12
+      port: 6379
+
+
 eureka:
   service-url:
     defaultZone: https://eureka.turkcell.com.tr/eureka/

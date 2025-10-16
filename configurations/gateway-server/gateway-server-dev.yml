@@ -1,3 +1,49 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8585/realms/ecommerce-dev
+  cloud:
+    gateway:
+      server:
+        webflux:
+          forwarded:
+            enabled: true
+          x-forwarded:
+            enabled: true
+          routes:
+            - id: review-service-router
+              uri: lb://review-service
+              predicates:
+                - Path=/api/v1/reviews/**,/api/v2/reviews/**redis
+            - id: order-service-router
+              uri: lb://order-service
+              predicates:
+                - Path=/api/v1/orders/**
+            - id: product-service-router
+              uri: lb://product-service
+              predicates:
+                - Path=/api/v1/products/**
+              filters:
+                - name: RequestRateLimiter
+                  args:
+                    key-resolver: "#{@ipKeyResolver}"
+                    redis-rate-limiter.replenishRate: 1
+                    redis-rate-limiter.burstCapacity: 60
+                    redis-rate-limiter.requestedTokens: 1
+            - id: aggregator-service-router
+              uri: lb://aggregator-service
+              predicates:
+                - Path=/api/v1/product-aggregator/**
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+
+
+
 eureka:
   service-url:
     defaultZone: http://localhost:8761/eureka/
