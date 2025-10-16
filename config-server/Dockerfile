@@ -1,18 +1,20 @@
-# Bu src kodun, sıfır bir makinede nasıl kurulacağı konusunda yönergeler içermelidir.
-FROM maven:3.9-eclipse-temurin-21-alpine
+# Single-Stage
 
-# alpine linuxla çalışan, içinde 21 jdk kurulu + maven kurulu bir sistem var.
-WORKDIR /app
+# Multi-Stage
+FROM maven:3.9-eclipse-temurin-21-alpine AS builder
 
-# Bir download işlemi copy işlemine genellikle tercih edilir.
+WORKDIR /build
+
 COPY pom.xml ./
-# Image'ın build aşaması.
+
 RUN mvn -DskipTests dependency:go-offline
+
 COPY src ./src
-# Image'ın build aşaması.
+
 RUN mvn -DskipTests clean package
 
-# Image'ın container oluşturma aşaması (çalışma aşaması.)
-ENTRYPOINT ["sh", "-c", "java -jar target/*.jar"]
+FROM eclipse-temurin:21-jre-alpine
 
-# 11.20
+COPY --from=builder /build/target/*.jar /app/app.jar
+
+ENTRYPOINT ["sh", "-c", "java -jar /app/app.jar"]
