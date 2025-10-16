@@ -5,7 +5,10 @@ spring:
     config:
       server:
         git:
-          uri:
-          default-label:
+          uri: https://github.com/halitkalayci/java-advanced-3.git
+          default-label: master
+          search-paths:
+            - configurations/
+            - configurations/{application}
 server:
   port: 8787
