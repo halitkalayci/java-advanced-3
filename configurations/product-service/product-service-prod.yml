@@ -18,3 +18,5 @@ eureka:
   client:
     service-url:
       defaultZone: https://eureka.turkcell.com/eureka/
+
+example: "Config-server'dan gelen product-service-prod.yml"
