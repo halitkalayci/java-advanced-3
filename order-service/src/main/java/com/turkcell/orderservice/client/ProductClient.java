@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
-@FeignClient(name="product-service", path = "/api/v1/products")
+@FeignClient(name="product-service",
+        path = "/api/v1/poducts",
+        fallback = ProductClientFallback.class)
 @Observed(name="product-client")
 public interface ProductClient {
     @GetMapping("{id}")

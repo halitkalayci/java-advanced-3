@@ -17,6 +17,9 @@ spring:
   kafka:
     bootstrap-servers: localhost:9094
   cloud:
+    openfeign:
+      circuitbreaker:
+        enabled: true
     function:
       definition: orderCreated;stockDecreaseFailed
     stream:
@@ -47,9 +50,34 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
 
 management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
   tracing:
     sampling:
       probability: 1.0
   zipkin:
     tracing:
       endpoint: http://localhost:9411/api/v2/spans
+
+# Bazı versiyonlar..
+
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 20
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 10
+        wait-duration-in-open-state: 15s
+        permitted-number-of-calls-in-half-open-state: 5
+        record-exceptions:
+          - feign.RetryableException
+          - feign.FeignException
+          - java.net.SocketException
+    instances:
+      product-service:
+        base-config: default

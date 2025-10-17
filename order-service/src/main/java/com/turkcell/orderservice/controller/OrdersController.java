@@ -62,8 +62,8 @@ public class OrdersController {
         for(CreateOrderRequest.OrderProductItem item: createOrderRequest.getItems())
         {
             GetProductByIdContract response = productClient.getProductById(item.productId());
-            /*if(response.stock() < item.quantity())
-                throw new RuntimeException(response.name() +  " ürünü için stok değeri yetersiz.");*/
+            if(response.stock() < item.quantity())
+                throw new RuntimeException(response.name() +  " ürünü için stok değeri yetersiz.");
             OrderItem orderItem = new OrderItem();
             orderItem.setQuantity(item.quantity());
             orderItem.setProductId(response.id());
