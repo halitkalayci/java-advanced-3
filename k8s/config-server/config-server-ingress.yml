@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: configserver-ingress
+  annotations:
+    kubernetes.io/ingress.class: "public"
+spec:
+  rules:
+    - host: "config-server.halitkalayci.com"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: config-server
+                port:
+                  number: 8787
+
+
+
