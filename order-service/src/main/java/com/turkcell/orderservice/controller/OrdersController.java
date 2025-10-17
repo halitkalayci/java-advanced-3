@@ -14,6 +14,7 @@ import com.turkcell.orderservice.messaging.event.OrderCreatedItem;
 import com.turkcell.orderservice.repository.OrderItemRepository;
 import com.turkcell.orderservice.repository.OrderRepository;
 import com.turkcell.orderservice.repository.OutboxMessageRepository;
+import com.turkcell.orderservice.service.ProductGateway;
 import io.micrometer.observation.annotation.Observed;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.web.bind.annotation.*;
@@ -28,16 +29,16 @@ import java.util.UUID;
 @Observed(name="orders-controller")
 public class OrdersController {
     private final RestTemplate restTemplate;
-    private final ProductClient productClient;
+    private final ProductGateway productGateway;
     private final StaticProductClient staticProductClient;
     private final OutboxMessageRepository outboxMessageRepository;
     private final ObjectMapper objectMapper;
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
 
-    public OrdersController(RestTemplate restTemplate, ProductClient productClient, StaticProductClient staticProductClient, OutboxMessageRepository outboxMessageRepository, ObjectMapper objectMapper, OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
+    public OrdersController(RestTemplate restTemplate, ProductGateway productGateway, StaticProductClient staticProductClient, OutboxMessageRepository outboxMessageRepository, ObjectMapper objectMapper, OrderRepository orderRepository, OrderItemRepository orderItemRepository) {
         this.restTemplate = restTemplate;
-        this.productClient = productClient;
+        this.productGateway = productGateway;
         this.staticProductClient = staticProductClient;
         this.outboxMessageRepository = outboxMessageRepository;
         this.objectMapper = objectMapper;
@@ -61,7 +62,7 @@ public class OrdersController {
 
         for(CreateOrderRequest.OrderProductItem item: createOrderRequest.getItems())
         {
-            GetProductByIdContract response = productClient.getProductById(item.productId());
+            GetProductByIdContract response = productGateway.getProductById(item.productId());
             if(response.stock() < item.quantity())
                 throw new RuntimeException(response.name() +  " ürünü için stok değeri yetersiz.");
             OrderItem orderItem = new OrderItem();

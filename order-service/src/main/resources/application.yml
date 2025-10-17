@@ -19,7 +19,7 @@ spring:
   cloud:
     openfeign:
       circuitbreaker:
-        enabled: true
+        enabled: false
     function:
       definition: orderCreated;stockDecreaseFailed
     stream:

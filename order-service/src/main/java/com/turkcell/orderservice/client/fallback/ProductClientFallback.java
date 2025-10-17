@@ -1,9 +1,9 @@
-package com.turkcell.orderservice.client;
+package com.turkcell.orderservice.client.fallback;
 
+import com.turkcell.orderservice.client.ProductClient;
 import com.turkcell.orderservice.contract.GetProductByIdContract;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 import java.util.logging.Logger;
 

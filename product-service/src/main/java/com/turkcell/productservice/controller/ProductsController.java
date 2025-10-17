@@ -44,6 +44,7 @@ public class ProductsController {
 
     @GetMapping("{id}")
     public com.turkcell.productservice.entity.Product getProduct(@PathVariable UUID id) {
+        System.out.println("Get product by id: " + id);
         GetByIdProductQuery query = new GetByIdProductQuery(id);
         return getByIdProductQueryHandler.handle(query);
     }
