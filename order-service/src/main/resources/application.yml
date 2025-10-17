@@ -81,3 +81,15 @@ resilience4j:
     instances:
       product-service:
         base-config: default
+  retry:
+    instances:
+      product-service:
+        max-attempts: 3
+        wait-duration: 300ms
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2.0
+        retry-exceptions:
+          - feign.RetryableException
+          - java.net.SocketException
+
+

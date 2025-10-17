@@ -16,10 +16,8 @@ public class ProductGateway {
         this.productClient = productClient;
     }
 
-    @CircuitBreaker(
-            name="product-service",
-            fallbackMethod = "fallBack"
-    )
+    //@CircuitBreaker(name="product-service",fallbackMethod = "fallBack")
+    @Retry(name="product-service", fallbackMethod = "fallBack")
     public GetProductByIdContract getProductById(UUID id){
         return productClient.getProductById(id);
     }
