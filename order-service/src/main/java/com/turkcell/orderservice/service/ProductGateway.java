@@ -4,9 +4,11 @@ import com.turkcell.orderservice.client.ProductClient;
 import com.turkcell.orderservice.contract.GetProductByIdContract;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class ProductGateway {
@@ -16,14 +18,15 @@ public class ProductGateway {
         this.productClient = productClient;
     }
 
-    //@CircuitBreaker(name="product-service",fallbackMethod = "fallBack")
+    @CircuitBreaker(name="product-service",fallbackMethod = "fallBack")
     @Retry(name="product-service", fallbackMethod = "fallBack")
-    public GetProductByIdContract getProductById(UUID id){
-        return productClient.getProductById(id);
+    @TimeLimiter(name="product-service", fallbackMethod = "fallBack")
+    public CompletableFuture<GetProductByIdContract> getProductById(UUID id){
+        return CompletableFuture.supplyAsync(() -> productClient.getProductById(id));
     }
 
-    public GetProductByIdContract fallBack(UUID id, Throwable exception) {
+    public CompletableFuture<GetProductByIdContract> fallBack(UUID id, Throwable exception) {
         System.out.println("Falling back " + exception.getMessage());
-        return new GetProductByIdContract(null, null, null, 0);
+        return CompletableFuture.completedFuture(new GetProductByIdContract(null, null, null, 0));
     }
 }

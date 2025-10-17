@@ -23,6 +23,8 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -55,14 +57,14 @@ public class OrdersController {
 
     @PostMapping
     @Observed(name="orders-controller.addOrder")
-    public String addOrder(@RequestBody CreateOrderRequest createOrderRequest) throws JsonProcessingException {
+    public CompletableFuture<String> addOrder(@RequestBody CreateOrderRequest createOrderRequest) throws JsonProcessingException, ExecutionException, InterruptedException {
         Order order = new Order();
         order.setCustomerId(UUID.randomUUID());
         orderRepository.save(order);
 
         for(CreateOrderRequest.OrderProductItem item: createOrderRequest.getItems())
         {
-            GetProductByIdContract response = productGateway.getProductById(item.productId());
+            GetProductByIdContract response = productGateway.getProductById(item.productId()).get();
             if(response.stock() < item.quantity())
                 throw new RuntimeException(response.name() +  " ürünü için stok değeri yetersiz.");
             OrderItem orderItem = new OrderItem();
@@ -87,6 +89,6 @@ public class OrdersController {
         outboxMessage.setPayloadJson(objectMapper.writeValueAsString(createdEvent));
 
         outboxMessageRepository.save(outboxMessage);
-        return "Sipariş alındı";
+        return CompletableFuture.completedFuture("Sipariş alındı");
     }
 }

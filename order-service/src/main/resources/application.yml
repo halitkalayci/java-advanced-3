@@ -20,6 +20,10 @@ spring:
     openfeign:
       circuitbreaker:
         enabled: false
+      httpclient:
+        connection-timeout: 2000
+        ok-http:
+          read-timeout: 60s
     function:
       definition: orderCreated;stockDecreaseFailed
     stream:
@@ -91,5 +95,10 @@ resilience4j:
         retry-exceptions:
           - feign.RetryableException
           - java.net.SocketException
+  timelimiter:
+    instances:
+      product-service:
+        timeout-duration: 4s
+        cancel-running-future: true
 
 
